@@ -2,12 +2,13 @@ import { Router, type IRouter } from "express";
 import TelegramBotAPI from "../lib/telegram-bot-api";
 import { splitEmojis, getChatIds } from "../lib/bot-helpers";
 import { onUpdate } from "../lib/bot-handler";
+import { defaultEmojiList } from "../lib/bot-constants";
 
 const router: IRouter = Router();
 
 const botToken = process.env["BOT_TOKEN"] ?? "";
 const botUsername = process.env["BOT_USERNAME"] ?? "";
-const reactions = splitEmojis(process.env["EMOJI_LIST"]);
+const reactions = splitEmojis(process.env["EMOJI_LIST"] || defaultEmojiList);
 const restrictedChats = getChatIds(process.env["RESTRICTED_CHATS"]);
 const randomLevel = parseInt(process.env["RANDOM_LEVEL"] ?? "0", 10);
 
