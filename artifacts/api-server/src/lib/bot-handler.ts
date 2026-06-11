@@ -42,7 +42,7 @@ interface TelegramUpdate {
 function mainMenu(botUsername: string) {
   return [
     [
-      { text: "➕ បន្ថែមទៅ Channel", url: `https://t.me/${botUsername}?startchannel=botstart` },
+      { text: "➕ Add to Channel", url: `https://t.me/${botUsername}?startchannel=botstart` },
       { text: "➕ បន្ថែមទៅ Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
     ],
     [
