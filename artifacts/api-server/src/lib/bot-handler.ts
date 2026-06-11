@@ -98,8 +98,11 @@ export async function onUpdate(
       return;
     }
 
-    // ── Private chat → show menu on every message ───────────────────────
+    // ── Private chat → react + show menu ───────────────────────────────
     if (content.chat.type === "private") {
+      if (!restrictedChats.includes(chatId)) {
+        await botApi.setMessageReaction(chatId, content.message_id, getRandomPositiveReaction(reactions));
+      }
       const firstName = content.from?.first_name ?? "មិត្ត";
       await botApi.sendMessage(
         chatId,
