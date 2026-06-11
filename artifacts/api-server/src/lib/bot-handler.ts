@@ -42,12 +42,12 @@ interface TelegramUpdate {
 function mainMenu(botUsername: string) {
   return [
     [
-      { text: "📋 Emoji ប្រតិកម្ម", callback_data: "reactions" },
-      { text: "💝 បរិច្ចាគ", callback_data: "donate" },
-    ],
-    [
       { text: "➕ បន្ថែមទៅ Channel", url: `https://t.me/${botUsername}?startchannel=botstart` },
       { text: "➕ បន្ថែមទៅ Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
+    ],
+    [
+      { text: "📋 Emoji ប្រតិកម្ម", callback_data: "reactions" },
+      { text: "💝 បរិច្ចាគ", callback_data: "donate" },
     ],
   ];
 }
