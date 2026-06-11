@@ -5,6 +5,6 @@ import botRouter from "./bot";
 const router: IRouter = Router();
 
 router.use(healthRouter);
-router.use(botRouter);
+router.use("/bot", botRouter);
 
 export default router;
