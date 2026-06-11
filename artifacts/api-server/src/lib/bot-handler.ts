@@ -46,7 +46,6 @@ function mainMenu(botUsername: string) {
       { text: "➕ Add to Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
     ],
     [
-      { text: "📋 Emoji ប្រតិកម្ម", callback_data: "reactions" },
       { text: "💝 បរិច្ចាគ", callback_data: "donate" },
     ],
   ];
