@@ -1,4 +1,4 @@
-export const startMessage = `👋 សួស្តី UserName !
+export const startMessage = `👋 សួស្តី UserName
 
 សូមស្វាគមន៍មកកាន់ *Auto Emoji Reaction Bot 🎉* រួចរាល់ដើម្បីបន្ថែមភាពសប្បាយរីករាយទៅការសន្ទនារបស់អ្នក!
 
