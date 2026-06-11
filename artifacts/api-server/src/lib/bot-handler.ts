@@ -114,16 +114,19 @@ export async function onUpdate(
   if (data.callback_query) {
     const cq = data.callback_query;
     const chatId = cq.from.id;
+    const msgId = cq.message?.message_id;
 
     await botApi.answerCallbackQuery(cq.id);
 
     if (cq.data === "reactions") {
       const reactionsList = reactions.join("  ");
-      await botApi.sendMessage(
-        chatId,
-        `✅ *Emoji ប្រតិកម្មដែលបានបើក:*\n\n${reactionsList}`,
-        [[{ text: "« ត្រឡប់ក្រោយ", callback_data: "back_menu" }]],
-      );
+      const text = `✅ *Emoji ប្រតិកម្មដែលបានបើក:*\n\n${reactionsList}`;
+      const keyboard = [[{ text: "« ត្រឡប់ក្រោយ", callback_data: "back_menu" }]];
+      if (msgId) {
+        await botApi.editMessageText(chatId, msgId, text, keyboard);
+      } else {
+        await botApi.sendMessage(chatId, text, keyboard);
+      }
     } else if (cq.data === "donate") {
       await botApi.sendInvoice(
         chatId,
@@ -137,11 +140,13 @@ export async function onUpdate(
       );
     } else if (cq.data === "back_menu") {
       const firstName = cq.from.first_name ?? "មិត្ត";
-      await botApi.sendMessage(
-        chatId,
-        startMessage.replace("UserName", firstName),
-        mainMenu(botUsername),
-      );
+      const text = startMessage.replace("UserName", firstName);
+      const keyboard = mainMenu(botUsername);
+      if (msgId) {
+        await botApi.editMessageText(chatId, msgId, text, keyboard);
+      } else {
+        await botApi.sendMessage(chatId, text, keyboard);
+      }
     }
 
     return;
