@@ -58,7 +58,6 @@ export async function onUpdate(
             { text: "➕ បន្ថែមទៅ Channel ➕", url: `https://t.me/${botUsername}?startchannel=botstart` },
             { text: "➕ បន្ថែមទៅ Group ➕", url: `https://t.me/${botUsername}?startgroup=botstart` },
           ],
-          [{ text: "កូដប្រភព Github 📥", url: "https://github.com/Malith-Rukshan/Auto-Reaction-Bot" }],
           [{ text: "💝 គាំទ្រយើង - បរិច្ចាគ 🤝", url: `https://t.me/Auto_ReactionBOT?start=donate` }],
         ],
       );
