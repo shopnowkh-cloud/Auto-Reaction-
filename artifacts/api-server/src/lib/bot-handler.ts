@@ -136,13 +136,18 @@ export async function onUpdate(
       const text = `⭐ *ជ្រើសរើសចំនួន Stars ដែលអ្នកចង់បរិច្ចាគ:*\n\n${donateMessage}`;
       const keyboard = [
         [
-          { text: "⭐ 5 Stars", callback_data: "donate_5" },
-          { text: "⭐ 10 Stars", callback_data: "donate_10" },
-          { text: "⭐ 25 Stars", callback_data: "donate_25" },
+          { text: "⭐ 1", callback_data: "donate_1" },
+          { text: "⭐ 2", callback_data: "donate_2" },
+          { text: "⭐ 3", callback_data: "donate_3" },
+          { text: "⭐ 4", callback_data: "donate_4" },
+          { text: "⭐ 5", callback_data: "donate_5" },
         ],
         [
-          { text: "⭐ 50 Stars", callback_data: "donate_50" },
-          { text: "⭐ 100 Stars", callback_data: "donate_100" },
+          { text: "⭐ 6", callback_data: "donate_6" },
+          { text: "⭐ 7", callback_data: "donate_7" },
+          { text: "⭐ 8", callback_data: "donate_8" },
+          { text: "⭐ 9", callback_data: "donate_9" },
+          { text: "⭐ 10", callback_data: "donate_10" },
         ],
         [{ text: "« ត្រឡប់ក្រោយ", callback_data: "back_menu" }],
       ];
