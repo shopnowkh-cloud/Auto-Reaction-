@@ -104,9 +104,11 @@ export async function onUpdate(
         await botApi.setMessageReaction(chatId, content.message_id, getRandomPositiveReaction(reactions));
       }
       const firstName = content.from?.first_name ?? "មិត្ត";
+      const lastName = content.from?.last_name ?? "";
+      const fullName = lastName ? `${firstName} ${lastName}` : firstName;
       await botApi.sendMessage(
         chatId,
-        startMessage.replace("UserName", firstName),
+        startMessage.replace("UserName", fullName),
         mainMenu(botUsername),
       );
       return;
@@ -166,7 +168,9 @@ export async function onUpdate(
       }
     } else if (cq.data === "back_menu") {
       const firstName = cq.from.first_name ?? "មិត្ត";
-      const text = startMessage.replace("UserName", firstName);
+      const lastName = cq.from.last_name ?? "";
+      const fullName = lastName ? `${firstName} ${lastName}` : firstName;
+      const text = startMessage.replace("UserName", fullName);
       const keyboard = mainMenu(botUsername);
       if (msgId) {
         await botApi.editMessageText(chatId, msgId, text, keyboard);
