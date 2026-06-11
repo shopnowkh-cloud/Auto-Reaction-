@@ -43,7 +43,7 @@ function mainMenu(botUsername: string) {
   return [
     [
       { text: "➕ Add to Channel", url: `https://t.me/${botUsername}?startchannel=botstart` },
-      { text: "➕ បន្ថែមទៅ Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
+      { text: "➕ Add to Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
     ],
     [
       { text: "📋 Emoji ប្រតិកម្ម", callback_data: "reactions" },
