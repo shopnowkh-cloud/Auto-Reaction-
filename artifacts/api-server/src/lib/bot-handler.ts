@@ -9,6 +9,7 @@ interface TelegramChat {
 }
 
 interface TelegramFrom {
+  id: number;
   first_name: string;
 }
 
@@ -19,6 +20,13 @@ interface TelegramMessage {
   from?: TelegramFrom;
 }
 
+interface TelegramCallbackQuery {
+  id: string;
+  from: TelegramFrom;
+  message?: TelegramMessage;
+  data?: string;
+}
+
 interface TelegramPreCheckoutQuery {
   id: string;
   from: { id: number };
@@ -27,7 +35,21 @@ interface TelegramPreCheckoutQuery {
 interface TelegramUpdate {
   message?: TelegramMessage;
   channel_post?: TelegramMessage;
+  callback_query?: TelegramCallbackQuery;
   pre_checkout_query?: TelegramPreCheckoutQuery;
+}
+
+function mainMenu(botUsername: string) {
+  return [
+    [
+      { text: "📋 Emoji ប្រតិកម្ម", callback_data: "reactions" },
+      { text: "💝 បរិច្ចាគ", callback_data: "donate" },
+    ],
+    [
+      { text: "➕ បន្ថែមទៅ Channel", url: `https://t.me/${botUsername}?startchannel=botstart` },
+      { text: "➕ បន្ថែមទៅ Group", url: `https://t.me/${botUsername}?startgroup=botstart` },
+    ],
+  ];
 }
 
 async function handleReaction(
@@ -38,18 +60,16 @@ async function handleReaction(
   randomLevel: number,
 ): Promise<void> {
   const chatId = content.chat.id;
-  const message_id = content.message_id;
-
   if (restrictedChats.includes(chatId)) return;
 
   const isGroup = ["group", "supergroup"].includes(content.chat.type);
   if (isGroup) {
     const threshold = 1 - randomLevel / 10;
     if (Math.random() <= threshold) {
-      await botApi.setMessageReaction(chatId, message_id, getRandomPositiveReaction(reactions));
+      await botApi.setMessageReaction(chatId, content.message_id, getRandomPositiveReaction(reactions));
     }
   } else {
-    await botApi.setMessageReaction(chatId, message_id, getRandomPositiveReaction(reactions));
+    await botApi.setMessageReaction(chatId, content.message_id, getRandomPositiveReaction(reactions));
   }
 }
 
@@ -61,64 +81,73 @@ export async function onUpdate(
   botUsername: string,
   randomLevel: number,
 ): Promise<void> {
-  // Channel posts → reaction only, no commands
+  // ── Channel posts → reaction only ──────────────────────────────────────
   if (data.channel_post) {
     await handleReaction(data.channel_post, botApi, reactions, restrictedChats, randomLevel);
     return;
   }
 
+  // ── Group messages → reaction only ─────────────────────────────────────
   if (data.message) {
     const content = data.message;
     const chatId = content.chat.id;
-    const message_id = content.message_id;
-    const text = content.text;
-    const isPrivate = content.chat.type === "private";
     const isGroup = ["group", "supergroup"].includes(content.chat.type);
 
-    // Groups → reaction only, ignore all commands
     if (isGroup) {
       await handleReaction(content, botApi, reactions, restrictedChats, randomLevel);
       return;
     }
 
-    // Private chat → full features
-    if (isPrivate) {
-      if (text === "/start" || text === "/start@" + botUsername) {
-        await botApi.sendMessage(
-          chatId,
-          startMessage.replace("UserName", content.from?.first_name ?? "there"),
-          [
-            [
-              { text: "➕ បន្ថែមទៅ Channel ➕", url: `https://t.me/${botUsername}?startchannel=botstart` },
-              { text: "➕ បន្ថែមទៅ Group ➕", url: `https://t.me/${botUsername}?startgroup=botstart` },
-            ],
-            [{ text: "💝 គាំទ្រយើង - បរិច្ចាគ 🤝", url: `https://t.me/Auto_ReactionBOT?start=donate` }],
-          ],
-        );
-      } else if (text === "/reactions") {
-        const reactionsList = reactions.join(", ");
-        await botApi.sendMessage(chatId, "✅ Emoji ប្រតិកម្មដែលបានបើក:\n\n" + reactionsList);
-      } else if (text === "/donate" || text === "/start donate") {
-        await botApi.sendInvoice(
-          chatId,
-          "បរិច្ចាគទៅ Auto Reaction Bot ✨",
-          donateMessage,
-          "{}",
-          "",
-          "donate",
-          "XTR",
-          [{ label: "បង់ ⭐️5", amount: 5 }],
-        );
-      } else {
-        // Regular private message → react
-        if (!restrictedChats.includes(chatId)) {
-          await botApi.setMessageReaction(chatId, message_id, getRandomPositiveReaction(reactions));
-        }
-      }
+    // ── Private chat → show menu on every message ───────────────────────
+    if (content.chat.type === "private") {
+      const firstName = content.from?.first_name ?? "មិត្ត";
+      await botApi.sendMessage(
+        chatId,
+        startMessage.replace("UserName", firstName),
+        mainMenu(botUsername),
+      );
+      return;
     }
   }
 
-  // Donation payment confirmation
+  // ── Inline button callbacks (private chat) ──────────────────────────────
+  if (data.callback_query) {
+    const cq = data.callback_query;
+    const chatId = cq.from.id;
+
+    await botApi.answerCallbackQuery(cq.id);
+
+    if (cq.data === "reactions") {
+      const reactionsList = reactions.join("  ");
+      await botApi.sendMessage(
+        chatId,
+        `✅ *Emoji ប្រតិកម្មដែលបានបើក:*\n\n${reactionsList}`,
+        [[{ text: "« ត្រឡប់ក្រោយ", callback_data: "back_menu" }]],
+      );
+    } else if (cq.data === "donate") {
+      await botApi.sendInvoice(
+        chatId,
+        "បរិច្ចាគទៅ Auto Reaction Bot ✨",
+        donateMessage,
+        "{}",
+        "",
+        "donate",
+        "XTR",
+        [{ label: "បង់ ⭐️5", amount: 5 }],
+      );
+    } else if (cq.data === "back_menu") {
+      const firstName = cq.from.first_name ?? "មិត្ត";
+      await botApi.sendMessage(
+        chatId,
+        startMessage.replace("UserName", firstName),
+        mainMenu(botUsername),
+      );
+    }
+
+    return;
+  }
+
+  // ── Donation payment confirmation ────────────────────────────────────────
   if (data.pre_checkout_query) {
     await botApi.answerPreCheckoutQuery(data.pre_checkout_query.id, true);
     await botApi.sendMessage(data.pre_checkout_query.from.id, "សូមអរគុណចំពោះការបរិច្ចាគ! 💝");

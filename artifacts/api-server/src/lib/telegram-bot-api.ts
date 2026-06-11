@@ -1,7 +1,10 @@
 /**
  * Telegram API wrapper
- * Repository: https://github.com/Malith-Rukshan/Auto-Reaction-Bot
  */
+
+type KeyboardButton =
+  | { text: string; url: string }
+  | { text: string; callback_data: string };
 
 export default class TelegramBotAPI {
   private apiUrl: string;
@@ -23,11 +26,6 @@ export default class TelegramBotAPI {
       const data = (await response.json()) as Record<string, unknown>;
 
       if (!response.ok) {
-        if (action === "setMessageReaction") {
-          console.error(`Chat ID: ${body.chat_id}, Message ID: ${body.message_id}`);
-        } else if (action === "sendMessage") {
-          console.error(`Chat ID: ${body.chat_id}`);
-        }
         if (data.description) console.error(`Error description: ${data.description}`);
         throw new Error(`Telegram API error: ${data.description || "Unknown error"}`);
       }
@@ -35,11 +33,8 @@ export default class TelegramBotAPI {
       return data;
     } catch (error: unknown) {
       const err = error as Error;
-      if (err.name === "AbortError") {
-        throw new Error(`Telegram API timeout: ${action}`);
-      } else if (!err.message?.includes("Telegram API error")) {
-        throw new Error(`Network error: ${action}`);
-      }
+      if (err.name === "AbortError") throw new Error(`Telegram API timeout: ${action}`);
+      if (!err.message?.includes("Telegram API error")) throw new Error(`Network error: ${action}`);
       throw error;
     }
   }
@@ -56,7 +51,7 @@ export default class TelegramBotAPI {
   async sendMessage(
     chatId: number,
     text: string,
-    inlineKeyboard: Array<Array<{ text: string; url: string }>> | null = null,
+    inlineKeyboard: Array<Array<KeyboardButton>> | null = null,
   ): Promise<void> {
     await this.callApi("sendMessage", {
       chat_id: chatId,
@@ -64,6 +59,29 @@ export default class TelegramBotAPI {
       parse_mode: "Markdown",
       disable_web_page_preview: true,
       ...(inlineKeyboard && { reply_markup: { inline_keyboard: inlineKeyboard } }),
+    });
+  }
+
+  async editMessageText(
+    chatId: number,
+    messageId: number,
+    text: string,
+    inlineKeyboard: Array<Array<KeyboardButton>> | null = null,
+  ): Promise<void> {
+    await this.callApi("editMessageText", {
+      chat_id: chatId,
+      message_id: messageId,
+      text,
+      parse_mode: "Markdown",
+      disable_web_page_preview: true,
+      ...(inlineKeyboard && { reply_markup: { inline_keyboard: inlineKeyboard } }),
+    });
+  }
+
+  async answerCallbackQuery(callbackQueryId: string, text?: string): Promise<void> {
+    await this.callApi("answerCallbackQuery", {
+      callback_query_id: callbackQueryId,
+      ...(text && { text }),
     });
   }
 
