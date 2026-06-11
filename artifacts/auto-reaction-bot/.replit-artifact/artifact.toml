@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Auto Reaction Bot"
+version = "1.0.0"
+id = "artifacts/auto-reaction-bot"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19642
+
+[services.development]
+run = "pnpm --filter @workspace/auto-reaction-bot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/auto-reaction-bot", "run", "build" ]
+publicDir = "artifacts/auto-reaction-bot/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19642"
+BASE_PATH = "/"
