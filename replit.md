@@ -1,36 +1,45 @@
-# [Project name]
+# Telegram Auto Reaction Bot
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A Telegram bot that automatically reacts to messages in channels, groups, and private chats with configurable emojis.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- Workflows start automatically — API server on port 8080, frontend on port 19642
+- `pnpm --filter @workspace/api-server run dev` — run the API server manually
 - `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- Webhook is registered at: `https://<REPLIT_DOMAIN>/api/bot/webhook`
+- To re-register the webhook after deploy: `curl "https://api.telegram.org/bot${BOT_TOKEN}/setWebhook?url=https://<domain>/api/bot/webhook"`
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- API: Express 5 (artifacts/api-server)
+- Frontend: Vite + React (artifacts/auto-reaction-bot) — landing page
+- Bot logic: artifacts/api-server/src/lib/ (telegram-bot-api.ts, bot-handler.ts, bot-helpers.ts)
+- No database needed
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- Bot webhook handler: `artifacts/api-server/src/routes/bot.ts`
+- Telegram API wrapper: `artifacts/api-server/src/lib/telegram-bot-api.ts`
+- Bot update logic: `artifacts/api-server/src/lib/bot-handler.ts`
+- Helper utilities: `artifacts/api-server/src/lib/bot-helpers.ts`
+- Landing page: `artifacts/auto-reaction-bot/src/pages/home.tsx`
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Bot uses webhook mode (not polling) — Telegram POSTs updates to `/api/bot/webhook`
+- The frontend is a simple React landing page matching the original HTML from the Vercel import
+- Bot config (token, emoji list, restricted chats) is loaded from env vars at startup
+- No database — the bot is stateless; all state lives in Telegram
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Automatically reacts to messages in any Telegram channel, group, or private chat the bot is added to
+- Configurable emoji set via `EMOJI_LIST` environment variable
+- Adjustable randomness for group reactions via `RANDOM_LEVEL` (0–10)
+- Supports `/start`, `/reactions`, and `/donate` commands
+- Accepts Telegram Stars donations via `/donate`
 
 ## User preferences
 
@@ -38,7 +47,18 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After deploying to production, re-register the webhook with the new production domain
+- `RANDOM_LEVEL` is optional (defaults to 0 = always react in groups). Higher = less frequent reactions
+- `RESTRICTED_CHATS` is optional — comma-separated chat IDs where the bot should NOT react
+- The bot returns HTTP 200 to Telegram even on errors (required by Telegram webhook protocol)
+
+## Required secrets
+
+- `BOT_TOKEN` — Telegram bot token from BotFather
+- `BOT_USERNAME` — Bot username without @ (e.g. MyReactionBot)
+- `EMOJI_LIST` — String of emojis to react with (e.g. 👍❤️🔥)
+- `RESTRICTED_CHATS` — (optional) Comma-separated chat IDs to skip
+- `RANDOM_LEVEL` — (optional) 0–10, controls group reaction frequency
 
 ## Pointers
 
