@@ -107,6 +107,13 @@ export default class TelegramBotAPI {
     });
   }
 
+  async deleteMessage(chatId: number, messageId: number): Promise<void> {
+    await this.callApi("deleteMessage", {
+      chat_id: chatId,
+      message_id: messageId,
+    });
+  }
+
   async answerPreCheckoutQuery(preCheckoutQueryId: string, ok: boolean): Promise<void> {
     await this.callApi("answerPreCheckoutQuery", {
       pre_checkout_query_id: preCheckoutQueryId,

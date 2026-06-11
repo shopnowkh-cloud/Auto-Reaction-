@@ -128,16 +128,39 @@ export async function onUpdate(
         await botApi.sendMessage(chatId, text, keyboard);
       }
     } else if (cq.data === "donate") {
-      await botApi.sendInvoice(
-        chatId,
-        "បរិច្ចាគទៅ Auto Reaction Bot ✨",
-        donateMessage,
-        "{}",
-        "",
-        "donate",
-        "XTR",
-        [{ label: "បង់ ⭐️5", amount: 5 }],
-      );
+      const text = `⭐ *ជ្រើសរើសចំនួន Stars ដែលអ្នកចង់បរិច្ចាគ:*\n\n${donateMessage}`;
+      const keyboard = [
+        [
+          { text: "⭐ 5 Stars", callback_data: "donate_5" },
+          { text: "⭐ 10 Stars", callback_data: "donate_10" },
+          { text: "⭐ 25 Stars", callback_data: "donate_25" },
+        ],
+        [
+          { text: "⭐ 50 Stars", callback_data: "donate_50" },
+          { text: "⭐ 100 Stars", callback_data: "donate_100" },
+        ],
+        [{ text: "« ត្រឡប់ក្រោយ", callback_data: "back_menu" }],
+      ];
+      if (msgId) {
+        await botApi.editMessageText(chatId, msgId, text, keyboard);
+      } else {
+        await botApi.sendMessage(chatId, text, keyboard);
+      }
+    } else if (cq.data?.startsWith("donate_")) {
+      const amount = parseInt(cq.data.split("_")[1], 10);
+      if (!isNaN(amount)) {
+        if (msgId) await botApi.deleteMessage(chatId, msgId);
+        await botApi.sendInvoice(
+          chatId,
+          "បរិច្ចាគទៅ Auto Reaction Bot ✨",
+          donateMessage,
+          "{}",
+          "",
+          "donate",
+          "XTR",
+          [{ label: `បង់ ⭐️${amount}`, amount }],
+        );
+      }
     } else if (cq.data === "back_menu") {
       const firstName = cq.from.first_name ?? "មិត្ត";
       const text = startMessage.replace("UserName", firstName);
