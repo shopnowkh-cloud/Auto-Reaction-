@@ -1,16 +1,16 @@
-export const startMessage = `👋 Hello there, UserName !
+export const startMessage = `👋 សួស្តី UserName !
 
-Welcome to the *Auto Emoji Reaction Bot 🎉*, ready to sprinkle your conversations with a little extra happiness!
+សូមស្វាគមន៍មកកាន់ *Auto Emoji Reaction Bot 🎉* រួចរាល់ដើម្បីបន្ថែមភាពសប្បាយរីករាយទៅការសន្ទនារបស់អ្នក!
 
-💁‍♂️ Here's how I spice up your chats:
+💁‍♂️ នេះជារបៀបដែល bot របស់ខ្ញុំដំណើរការ:
 
-*✨ DM Magic*: Message me and receive a surprise emoji in return. Expect the unexpected and enjoy the fun!
-*🏖 Group & Channel*: Add me to your groups or channels, and I'll keep the vibe positive by reacting to messages with engaging emojis.
+*✨ ចាត់ (DM)*: ផ្ញើសារមកខ្ញុំ ហើយអ្នកនឹងទទួលបាន emoji ស្ទើរ។ រំពឹងទុកអ្វីដែលមិនទាន់ ហើយសប្បាយ!
+*🏖 ក្រុម & Channel*: បន្ថែមខ្ញុំទៅក្រុម ឬ channel របស់អ្នក ហើយខ្ញុំនឹងរក្សា vibes វិជ្ជមានដោយប្រតិកម្ម emoji ចំពោះសារ។
 
-✍️ To view the emojis I can use, simply type /reactions. To create your own auto reaction bot, head over to: [Auto-Reaction-Bot on GitHub](https://github.com/Malith-Rukshan/Auto-Reaction-Bot).
+✍️ ដើម្បីមើល emoji ដែលខ្ញុំប្រើ គ្រាន់តែវាយ /reactions។ ដើម្បីបង្កើត auto reaction bot ផ្ទាល់ខ្លួន សូមមើល: [Auto-Reaction-Bot នៅ GitHub](https://github.com/Malith-Rukshan/Auto-Reaction-Bot)។
 
-Let's elevate our conversations with more energy and color! 🚀
+តោះ​ធ្វើ​ឲ្យ​ការ​សន្ទនា​របស់​យើង​ កាន់​តែ​សប្បាយ! 🚀
 
-💖 Keep us running! Support the bot: /donate`;
+💖 ជួយ​ឲ្យ​យើង​រស់​រាន: /donate`;
 
-export const donateMessage = `🙏 Support Auto Reaction Bot ✨ and help us stay online and continue to improve! ✨ Your donations keep our services live and enable us to bring you new features and enhancements. Every star makes a difference! Thank you! 🌟🚀`;
+export const donateMessage = `🙏 គាំទ្រ Auto Reaction Bot ✨ ហើយជួយឲ្យយើងដំណើរការបន្ត និងបន្តកែល្អ! ✨ ការបរិច្ចាគរបស់អ្នករក្សាសេវាកម្មយើងឲ្យដំណើរការ និងអនុញ្ញាតឲ្យយើងនាំមកនូវវិធីសាស្ត្រថ្មី។ សូមអរគុណ! 🌟🚀`;

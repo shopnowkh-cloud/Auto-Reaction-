@@ -55,26 +55,26 @@ export async function onUpdate(
         ),
         [
           [
-            { text: "➕ Add to Channel ➕", url: `https://t.me/${botUsername}?startchannel=botstart` },
-            { text: "➕ Add to Group ➕", url: `https://t.me/${botUsername}?startgroup=botstart` },
+            { text: "➕ បន្ថែមទៅ Channel ➕", url: `https://t.me/${botUsername}?startchannel=botstart` },
+            { text: "➕ បន្ថែមទៅ Group ➕", url: `https://t.me/${botUsername}?startgroup=botstart` },
           ],
-          [{ text: "Github Source 📥", url: "https://github.com/Malith-Rukshan/Auto-Reaction-Bot" }],
-          [{ text: "💝 Support Us - Donate 🤝", url: `https://t.me/Auto_ReactionBOT?start=donate` }],
+          [{ text: "កូដប្រភព Github 📥", url: "https://github.com/Malith-Rukshan/Auto-Reaction-Bot" }],
+          [{ text: "💝 គាំទ្រយើង - បរិច្ចាគ 🤝", url: `https://t.me/Auto_ReactionBOT?start=donate` }],
         ],
       );
     } else if (data.message && text === "/reactions") {
       const reactionsList = reactions.join(", ");
-      await botApi.sendMessage(chatId, "✅ Enabled Reactions : \n\n" + reactionsList);
+      await botApi.sendMessage(chatId, "✅ Emoji ប្រតិកម្មដែលបានបើក:\n\n" + reactionsList);
     } else if (data.message && (text === "/donate" || text === "/start donate")) {
       await botApi.sendInvoice(
         chatId,
-        "Donate to Auto Reaction Bot ✨",
+        "បរិច្ចាគទៅ Auto Reaction Bot ✨",
         donateMessage,
         "{}",
         "",
         "donate",
         "XTR",
-        [{ label: "Pay ⭐️5", amount: 5 }],
+        [{ label: "បង់ ⭐️5", amount: 5 }],
       );
     } else {
       const threshold = 1 - randomLevel / 10;
@@ -90,6 +90,6 @@ export async function onUpdate(
     }
   } else if (data.pre_checkout_query) {
     await botApi.answerPreCheckoutQuery(data.pre_checkout_query.id, true);
-    await botApi.sendMessage(data.pre_checkout_query.from.id, "Thank you for your donation! 💝");
+    await botApi.sendMessage(data.pre_checkout_query.from.id, "សូមអរគុណចំពោះការបរិច្ចាគ! 💝");
   }
 }
